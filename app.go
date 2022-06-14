@@ -19,23 +19,21 @@ type App struct {
 func (a *App) Initialize(host, port, user, password, dbname string) {
 	var psqlInfo = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable connect_timeout=3",
 		host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
+	var err error
+	a.DB, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = db.Ping()
+	err = a.DB.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
-	a.DB = db
+	a.Router = sw.NewRouter()
 }
 
 func (a *App) Run(addr string) {
 	log.Printf("Server started")
-
-	router := sw.NewRouter()
-
-	log.Fatal(http.ListenAndServe(addr, router))
+	log.Fatal(http.ListenAndServe(addr, a.Router))
 }
 
 func (a *App) ensureTableExists() {
