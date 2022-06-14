@@ -38,6 +38,8 @@ paths:
                 $ref: '#/components/schemas/LocationHeader'
         "400":
           description: bad input parameter
+        "404":
+          description: shortURL not found
   /api/v1/data/shorten:
     post:
       summary: Create a new short URL

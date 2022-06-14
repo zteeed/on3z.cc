@@ -10,23 +10,19 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
-	// WARNING!
-	// Change this to a fully-qualified import path
-	// once you place this file into your project.
-	// For example,
-	//
-	//    sw "github.com/myname/myrepo/go"
-	//
-	sw "llil.gq/go"
+	"github.com/joho/godotenv"
+	"os"
 )
 
 func main() {
-	log.Printf("Server started")
-
-	router := sw.NewRouter()
-
-	log.Fatal(http.ListenAndServe("0.0.0.0:8080", router))
+	_ = godotenv.Load()
+	app := App{}
+	app.Initialize(
+		os.Getenv("APP_DB_HOST"),
+		os.Getenv("APP_DB_PORT"),
+		os.Getenv("APP_DB_USERNAME"),
+		os.Getenv("APP_DB_PASSWORD"),
+		os.Getenv("APP_DB_NAME"))
+	app.ensureTableExists()
+	app.Run("0.0.0.0:8888")
 }

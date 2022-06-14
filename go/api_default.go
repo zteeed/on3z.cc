@@ -10,12 +10,35 @@
 package swagger
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
+	"net/url"
 )
+
+func BadRequest(w http.ResponseWriter, err error) {
+	// TODO: format result as JSON instead of println
+	log.Printf("Cannot extract longURL from request")
+	// log.Fatal(err)
+	w.WriteHeader(http.StatusBadRequest)
+}
 
 func CreateNewShortURL(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
+	decoder := json.NewDecoder(r.Body)
+	var data LongUrlPayload
+	err := decoder.Decode(&data)
+	if err != nil {
+		BadRequest(w, err)
+		return
+	}
+	_, err = url.ParseRequestURI(data.LongURL)
+	if err != nil {
+		BadRequest(w, err)
+		return
+	}
+	log.Printf(data.LongURL)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func ReturnLongURL(w http.ResponseWriter, r *http.Request) {
