@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  description: This is an URL Shortener API
+  contact:
+    email: aurelien@duboc.xyz
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/zteeed/llil.gq/1.0.0
+  description: URL Shortener API
+paths:
+  /api/v1/{shortUrl}:
+    get:
+      summary: Return longURL for HTTP redirection
+      description: |
+        Return longURL for HTTP redirection with response 301 and header Location
+      operationId: returnLongURL
+      parameters:
+      - name: shortUrl
+        in: path
+        description: Return longURL for HTTP redirection
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "301":
+          description: 301 response
+          headers:
+            Location:
+              style: simple
+              explode: false
+              schema:
+                $ref: '#/components/schemas/LocationHeader'
+        "400":
+          description: bad input parameter
+  /api/v1/data/shorten:
+    post:
+      summary: Create a new short URL
+      description: |
+        Create a new short URL
+      operationId: createNewShortURL
+      requestBody:
+        description: Inventory item to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LongURLPayload'
+      responses:
+        "201":
+          description: New short URL created
+        "400":
+          description: "invalid input, object invalid"
+components:
+  schemas:
+    LocationHeader:
+      type: string
+      example: https://llil.gq/7vrdwOV
+    LongURLPayload:
+      required:
+      - longURL
+      type: object
+      properties:
+        longURL:
+          type: string
+          example: https://en.wikipedia.org/wiki/Wikipedia:URLShortener
