@@ -1,42 +1,54 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 	sw "llil.gq/go"
 	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
-	_ "github.com/lib/pq"
 )
 
 type App struct {
-	Router *mux.Router
-	DB     *sql.DB
+	Router *http.ServeMux
+	DB     *pg.DB
+}
+
+// createSchema creates database schema for ShortUrlMap model.
+func createSchema(db *pg.DB) error {
+	models := []interface{}{
+		(*sw.ShortUrlMap)(nil),
+	}
+
+	for _, model := range models {
+		err := db.Model(model).CreateTable(&orm.CreateTableOptions{
+			Temp: false,
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (a *App) Initialize(host, port, user, password, dbname string) {
-	var psqlInfo = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable connect_timeout=3",
-		host, port, user, password, dbname)
-	var err error
-	a.DB, err = sql.Open("postgres", psqlInfo)
+	db := pg.Connect(&pg.Options{
+		Addr:     fmt.Sprintf("%s:%s", host, port),
+		User:     user,
+		Password: password,
+		Database: dbname,
+	})
+	defer db.Close()
+
+	err := createSchema(db)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	err = a.DB.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-	a.Router = sw.NewRouter()
+
+	a.Router = sw.NewRouter(db)
 }
 
 func (a *App) Run(addr string) {
 	log.Printf("Server started")
 	log.Fatal(http.ListenAndServe(addr, a.Router))
-}
-
-func (a *App) ensureTableExists() {
-	tableCreationQuery := "CREATE TABLE urls(longURL VARCHAR NOT NULL UNIQUE, shortURL VARCHAR NOT NULL UNIQUE);"
-	a.DB.Exec(tableCreationQuery)
 }

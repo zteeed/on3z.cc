@@ -10,6 +10,5 @@
 package swagger
 
 type LongUrlPayload struct {
-
-	LongURL string `json:"longURL"`
+	LongURL string `json:"LongURL"`
 }

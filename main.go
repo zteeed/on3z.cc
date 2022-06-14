@@ -23,6 +23,5 @@ func main() {
 		os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),
 		os.Getenv("APP_DB_NAME"))
-	app.ensureTableExists()
 	app.Run("0.0.0.0:8888")
 }

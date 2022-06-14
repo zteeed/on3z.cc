@@ -1,7 +1,7 @@
 /*
  * URL Shortener API
  *
- * This is an URL Shortener API
+ * This is a URL Shortener API
  *
  * API version: 1.0.0
  * Contact: aurelien@duboc.xyz
@@ -10,50 +10,41 @@
 package swagger
 
 import (
+	"github.com/go-pg/pg/v10"
 	"net/http"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 type Route struct {
-	Name        string
-	Method      string
-	Pattern     string
-	HandlerFunc http.HandlerFunc
+	Name    string
+	Method  string
+	Pattern string
+	Handler http.Handler
 }
 
 type Routes []Route
 
-func NewRouter() *mux.Router {
-	router := mux.NewRouter().StrictSlash(true)
+func NewRouter(db *pg.DB) *http.ServeMux {
+	// router := mux.NewRouter().StrictSlash(true)
+	router := http.NewServeMux()
+	var routes = Routes{
+		Route{
+			"CreateNewShortURL",
+			strings.ToUpper("Post"),
+			"/api/v1/data/shorten",
+			&CreateNewShortURL{db},
+		},
+		Route{
+			"ReturnLongURL",
+			strings.ToUpper("Get"),
+			"/api/v1/{shortUrl}",
+			&ReturnLongURL{db},
+		},
+	}
 	for _, route := range routes {
-		var handler http.Handler
-		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
-
-		router.
-			Methods(route.Method).
-			Path(route.Pattern).
-			Name(route.Name).
-			Handler(handler)
+		handler := Logger(route.Handler, route.Name)
+		router.Handle(route.Pattern, handler)
 	}
 
 	return router
-}
-
-var routes = Routes{
-	Route{
-		"CreateNewShortURL",
-		strings.ToUpper("Post"),
-		"/api/v1/data/shorten",
-		CreateNewShortURL,
-	},
-
-	Route{
-		"ReturnLongURL",
-		strings.ToUpper("Get"),
-		"/api/v1/{shortUrl}",
-		ReturnLongURL,
-	},
 }

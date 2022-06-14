@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: URL Shortener API
-  description: This is an URL Shortener API
+  description: This is a URL Shortener API
   contact:
     email: aurelien@duboc.xyz
   license:

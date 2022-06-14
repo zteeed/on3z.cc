@@ -11,37 +11,47 @@ package swagger
 
 import (
 	"encoding/json"
+	"github.com/go-pg/pg/v10"
 	"log"
 	"net/http"
 	"net/url"
 )
 
-func BadRequest(w http.ResponseWriter, err error) {
-	// TODO: format result as JSON instead of println
-	log.Printf("Cannot extract longURL from request")
-	// log.Fatal(err)
-	w.WriteHeader(http.StatusBadRequest)
+type CreateNewShortURL struct {
+	db *pg.DB
 }
 
-func CreateNewShortURL(w http.ResponseWriter, r *http.Request) {
+func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 	decoder := json.NewDecoder(r.Body)
 	var data LongUrlPayload
 	err := decoder.Decode(&data)
 	if err != nil {
-		BadRequest(w, err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	_, err = url.ParseRequestURI(data.LongURL)
 	if err != nil {
-		BadRequest(w, err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	log.Printf(data.LongURL)
 	w.WriteHeader(http.StatusCreated)
 }
 
-func ReturnLongURL(w http.ResponseWriter, r *http.Request) {
+type ReturnLongURL struct {
+	db *pg.DB
+}
+
+func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 	w.WriteHeader(http.StatusOK)
 }
