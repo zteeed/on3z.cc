@@ -10,15 +10,37 @@
 package swagger
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"github.com/go-pg/pg/v10"
-	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
+func removeCharacters(input string, characters string) string {
+	filter := func(r rune) rune {
+		if strings.IndexRune(characters, r) < 0 {
+			return r
+		}
+		return -1
+	}
+	return strings.Map(filter, input)
+}
+
+func computeShortURL(LongURL string) string {
+	hash := sha1.New()
+	hash.Write([]byte(LongURL))
+	hashBase64 := base64.StdEncoding.EncodeToString(hash.Sum(nil))
+	hashBase64Stripped := removeCharacters(hashBase64, "+/=")
+	return hashBase64Stripped[:7]
+}
+
 type CreateNewShortURL struct {
-	db *pg.DB
+	db      *pg.DB
+	baseUrl string
 }
 
 func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +50,7 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	decoder := json.NewDecoder(r.Body)
-	var data LongUrlPayload
+	var data longUrlPayload
 	err := decoder.Decode(&data)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -39,12 +61,15 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	log.Printf(data.LongURL)
+	fmt.Println(data.LongURL)
+	shortURL := computeShortURL(data.LongURL)
+	fmt.Println(h.baseUrl + "/" + shortURL)
 	w.WriteHeader(http.StatusCreated)
 }
 
 type ReturnLongURL struct {
-	db *pg.DB
+	db      *pg.DB
+	baseUrl string
 }
 
 func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {

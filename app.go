@@ -21,17 +21,18 @@ func createSchema(db *pg.DB) error {
 	}
 
 	for _, model := range models {
-		err := db.Model(model).CreateTable(&orm.CreateTableOptions{
-			Temp: false,
-		})
+		_, err := db.Model(model).Exists()
 		if err != nil {
-			return err
+			err := db.Model(model).CreateTable(&orm.CreateTableOptions{})
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
-func (a *App) Initialize(host, port, user, password, dbname string) {
+func (a *App) Initialize(host string, port string, user string, password string, dbname string, baseUrl string) {
 	db := pg.Connect(&pg.Options{
 		Addr:     fmt.Sprintf("%s:%s", host, port),
 		User:     user,
@@ -45,7 +46,7 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 		panic(err)
 	}
 
-	a.Router = sw.NewRouter(db)
+	a.Router = sw.NewRouter(db, baseUrl)
 }
 
 func (a *App) Run(addr string) {

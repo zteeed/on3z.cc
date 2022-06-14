@@ -24,7 +24,7 @@ type Route struct {
 
 type Routes []Route
 
-func NewRouter(db *pg.DB) *http.ServeMux {
+func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
 	// router := mux.NewRouter().StrictSlash(true)
 	router := http.NewServeMux()
 	var routes = Routes{
@@ -32,13 +32,13 @@ func NewRouter(db *pg.DB) *http.ServeMux {
 			"CreateNewShortURL",
 			strings.ToUpper("Post"),
 			"/api/v1/data/shorten",
-			&CreateNewShortURL{db},
+			&CreateNewShortURL{db, baseUrl},
 		},
 		Route{
 			"ReturnLongURL",
 			strings.ToUpper("Get"),
 			"/api/v1/{shortUrl}",
-			&ReturnLongURL{db},
+			&ReturnLongURL{db, baseUrl},
 		},
 	}
 	for _, route := range routes {

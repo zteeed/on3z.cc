@@ -22,6 +22,7 @@ func main() {
 		os.Getenv("APP_DB_PORT"),
 		os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),
-		os.Getenv("APP_DB_NAME"))
+		os.Getenv("APP_DB_NAME"),
+		os.Getenv("APP_BASE_URL"))
 	app.Run("0.0.0.0:8888")
 }
