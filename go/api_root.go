@@ -1,7 +1,7 @@
 /*
  * URL Shortener API
  *
- * This is an URL Shortener API
+ * This is a URL Shortener API
  *
  * API version: 1.0.0
  * Contact: aurelien@duboc.xyz
@@ -10,15 +10,13 @@
 package swagger
 
 import (
-	"fmt"
 	"github.com/go-pg/pg/v10"
 	"net/http"
 	"strings"
 )
 
 type ReturnLongURL struct {
-	db      *pg.DB
-	baseUrl string
+	db *pg.DB
 }
 
 func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -28,12 +26,8 @@ func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	shortURL := strings.TrimPrefix(r.URL.Path, "/")
-	fmt.Println(shortURL)
-	shortUrlMap := new(ShortUrlMap)
-	err := h.db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
-	fmt.Println(err)
-	fmt.Println(shortUrlMap)
-	if err != nil {
+	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
+	if !shortUrlExist {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}

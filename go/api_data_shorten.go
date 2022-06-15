@@ -1,7 +1,7 @@
 /*
  * URL Shortener API
  *
- * This is an URL Shortener API
+ * This is a URL Shortener API
  *
  * API version: 1.0.0
  * Contact: aurelien@duboc.xyz
@@ -10,38 +10,28 @@
 package swagger
 
 import (
-	"crypto/sha1"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/go-pg/pg/v10"
 	"log"
 	"net/http"
 	"net/url"
-	"strings"
 )
-
-func removeCharacters(input string, characters string) string {
-	filter := func(r rune) rune {
-		if strings.IndexRune(characters, r) < 0 {
-			return r
-		}
-		return -1
-	}
-	return strings.Map(filter, input)
-}
-
-func computeShortURL(LongURL string) string {
-	hash := sha1.New()
-	hash.Write([]byte(LongURL))
-	hashBase64 := base64.StdEncoding.EncodeToString(hash.Sum(nil))
-	hashBase64Stripped := removeCharacters(hashBase64, "+/=")
-	return hashBase64Stripped[:7]
-}
 
 type CreateNewShortURL struct {
 	db      *pg.DB
 	baseUrl string
+}
+
+func FormatResponse(baseUrl string, shortURL string) []byte {
+	response := make(map[string]string)
+	shortURLResponse := fmt.Sprintf("%s/%s", baseUrl, shortURL)
+	response["shortURL"] = shortURLResponse
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+	return jsonResponse
 }
 
 func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -50,8 +40,8 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-	decoder := json.NewDecoder(r.Body)
 	var data longUrlPayload
+	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&data)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -63,30 +53,17 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	shortURL := computeShortURL(data.LongURL)
-	shortUrlMap := new(ShortUrlMap)
-	err = h.db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
-	if err != nil {
-		shortUrlMapInsert := &ShortUrlMap{
-			LongURL:  data.LongURL,
-			ShortURL: shortURL,
-		}
-		_, err := h.db.Model(shortUrlMapInsert).Insert()
-		if err != nil {
-			panic(err)
-		}
+	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
+	if !shortUrlExist {
+		addShortUrl(h.db, data.LongURL, shortURL)
 	} else {
 		if shortUrlMap.LongURL != data.LongURL {
 			// TODO: Manage hash collision
+			fmt.Println("COLLISION")
 		}
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	response := make(map[string]string)
-	shortURLResponse := fmt.Sprintf("%s/%s", h.baseUrl, shortURL)
-	response["shortURL"] = shortURLResponse
-	jsonResponse, err := json.Marshal(response)
-	if err != nil {
-		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
-	}
+	jsonResponse := FormatResponse(h.baseUrl, shortURL)
 	w.Write(jsonResponse)
 }

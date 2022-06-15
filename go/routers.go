@@ -38,7 +38,7 @@ func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
 			"ReturnLongURL",
 			strings.ToUpper("Get"),
 			"/",
-			&ReturnLongURL{db, baseUrl},
+			&ReturnLongURL{db},
 		},
 	}
 	for _, route := range routes {
