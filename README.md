@@ -1,5 +1,9 @@
 # llil.gq
 
+## Register domain on freenom
+
+![](.img/freenom.png)
+
 ## Deployment
 
 ```bash
