@@ -55,4 +55,4 @@ jobs:
       - name: Deploy
         run: |
           docker-compose build --no-cache
-          docker-compose up -d
+          POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} docker-compose up -d
