@@ -9,8 +9,8 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/zteeed/llil.gq/1.0.0
-  description: URL Shortener API
+  - url: https://virtserver.swaggerhub.com/zteeed/llil.gq/1.0.0
+    description: URL Shortener API
 paths:
   /api/v1/{shortUrl}:
     get:
@@ -19,14 +19,14 @@ paths:
         Return longURL for HTTP redirection with response 301 and header Location
       operationId: returnLongURL
       parameters:
-      - name: shortUrl
-        in: path
-        description: Return longURL for HTTP redirection
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: shortUrl
+          in: path
+          description: Return longURL for HTTP redirection
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
       responses:
         "301":
           description: 301 response
@@ -64,7 +64,7 @@ components:
       example: https://llil.gq/7vrdwOV
     LongURLPayload:
       required:
-      - longURL
+        - longURL
       type: object
       properties:
         longURL:
