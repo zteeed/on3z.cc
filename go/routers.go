@@ -25,7 +25,6 @@ type Route struct {
 type Routes []Route
 
 func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
-	// router := mux.NewRouter().StrictSlash(true)
 	router := http.NewServeMux()
 	var routes = Routes{
 		Route{
