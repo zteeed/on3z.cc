@@ -10,14 +10,13 @@
 package swagger
 
 import (
+	"llil.gq/go/database"
 	"net/http"
 	"strings"
-
-	"github.com/go-pg/pg/v10"
 )
 
 type RootHandler struct {
-	db *pg.DB
+	database database.Database
 }
 
 func (h *RootHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -34,12 +33,12 @@ func (h *RootHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	shortURL := strings.TrimPrefix(r.URL.Path, "/")
-	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
-	if !shortUrlExist {
+	result, err := database.SelectShortURL(h.database, shortURL)
+	if err != nil {
 		w.Header().Set("Location", "/404")
 		w.WriteHeader(302)
 		return
 	}
-	w.Header().Set("Location", shortUrlMap.LongURL)
+	w.Header().Set("Location", result.LongURL)
 	w.WriteHeader(301)
 }

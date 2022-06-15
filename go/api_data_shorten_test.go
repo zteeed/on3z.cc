@@ -1,46 +1,29 @@
 package swagger
 
 import (
-	"fmt"
+	"github.com/stretchr/testify/assert"
+	"llil.gq/go/database"
 	"os"
 	"testing"
-
-	"github.com/go-pg/pg/v10"
-	"github.com/stretchr/testify/assert"
 )
 
-func newTestDB(t *testing.T) *pg.DB {
+func newTestDB(t *testing.T) database.Database {
 	t.Helper()
-	host := os.Getenv("APP_DB_HOST")
-	port := os.Getenv("APP_DB_PORT")
-	user := os.Getenv("APP_DB_USERNAME")
-	password := os.Getenv("APP_DB_PASSWORD")
-	dbname := os.Getenv("APP_DB_NAME")
-	db := pg.Connect(&pg.Options{
-		Addr:     fmt.Sprintf("%s:%s", host, port),
-		User:     user,
-		Password: password,
-		Database: dbname,
-	})
+	db := database.InitializeSqlDB()
+	dbObject := database.InitializeDatabase(db)
 
 	t.Cleanup(func() {
-		var shortUrlMaps []ShortUrlMap
-		res, err := db.Model(&shortUrlMaps).Where("true").Delete()
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("Rows deleted: ", res.RowsAffected())
-
+		database.DeleteAll(dbObject)
 	})
 
-	return db
+	return database.InitializeDatabase(db)
 }
 
 func newTestDataShortenHandler(t *testing.T) *DataShortenHandler {
 	t.Helper()
 	return &DataShortenHandler{
-		db:      newTestDB(t),
-		baseUrl: os.Getenv("APP_BASE_URL"),
+		database: newTestDB(t),
+		baseUrl:  os.Getenv("APP_BASE_URL"),
 	}
 }
 
@@ -56,7 +39,7 @@ func TestCreateNewShortURL_generateShortUrl(t *testing.T) {
 	t.Run("Collision", func(t *testing.T) {
 		h := newTestDataShortenHandler(t)
 
-		addShortUrl(h.db, "url", "IjZEPut")
+		database.AddShortUrl(h.database, "url", "IjZEPut")
 		res := h.generateShortUrl(longUrlPayload{
 			LongURL: "longurl",
 		})

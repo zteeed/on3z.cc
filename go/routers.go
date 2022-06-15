@@ -10,10 +10,9 @@
 package swagger
 
 import (
+	"llil.gq/go/database"
 	"net/http"
 	"strings"
-
-	"github.com/go-pg/pg/v10"
 )
 
 type Route struct {
@@ -25,7 +24,7 @@ type Route struct {
 
 type Routes []Route
 
-func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
+func NewRouter(db database.Database, baseUrl string) *http.ServeMux {
 	router := http.NewServeMux()
 	var routes = Routes{
 		Route{

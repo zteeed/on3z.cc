@@ -12,16 +12,15 @@ package swagger
 import (
 	"encoding/json"
 	"fmt"
+	"llil.gq/go/database"
 	"log"
 	"net/http"
 	"net/url"
-
-	"github.com/go-pg/pg/v10"
 )
 
 type DataShortenHandler struct {
-	db      *pg.DB
-	baseUrl string
+	database database.Database
+	baseUrl  string
 }
 
 func FormatResponse(baseUrl string, shortURL string) []byte {
@@ -69,17 +68,16 @@ func (h *DataShortenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func (h *DataShortenHandler) generateShortUrl(data longUrlPayload) string {
 	shortURL := computeShortURL(data.LongURL)
-	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
-	if !shortUrlExist {
-		addShortUrl(h.db, data.LongURL, shortURL)
+	result, err := database.SelectShortURL(h.database, shortURL)
+	if err != nil {
+		database.AddShortUrl(h.database, data.LongURL, shortURL)
 	} else {
-		if shortUrlMap.LongURL != data.LongURL {
-			newShortUrlDoesNotExist := true
-			for newShortUrlDoesNotExist {
+		if result.LongURL != data.LongURL {
+			for err == nil {
 				shortURL = computeShortURL(h.baseUrl + data.LongURL)
-				newShortUrlDoesNotExist, shortUrlMap = selectShortURL(h.db, shortURL)
+				result, err = database.SelectShortURL(h.database, shortURL)
 			}
-			addShortUrl(h.db, data.LongURL, shortURL)
+			database.AddShortUrl(h.database, data.LongURL, shortURL)
 		}
 	}
 	return shortURL
