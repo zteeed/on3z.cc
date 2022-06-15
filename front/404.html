@@ -48,7 +48,7 @@
                 <div class="formbg">
                     <div class="formbg-inner padding-horizontal--48">
                         <span class="padding-bottom--15" style="text-align: center">Error 404: This page is like Santa. Doesn't exists. Sorry :(</span>
-                        <form id="go-back-home" action="/" method="GET">
+                        <form id="go-back-home">
                             <div class="field padding-top--64 padding-bottom--24">
                                 <input name="submit" type="submit" value="Home">
                             </div>
@@ -69,3 +69,10 @@
 </body>
 
 </html>
+<script>
+    var form = document.getElementById('go-back-home');
+    form.onsubmit = function(e) {
+        location.href = '/';
+        e.preventDefault();
+    };
+</script>
