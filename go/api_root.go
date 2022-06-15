@@ -10,16 +10,17 @@
 package swagger
 
 import (
-	"github.com/go-pg/pg/v10"
 	"net/http"
 	"strings"
+
+	"github.com/go-pg/pg/v10"
 )
 
-type ReturnLongURL struct {
+type RootHandler struct {
 	db *pg.DB
 }
 
-func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *RootHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET,OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers")

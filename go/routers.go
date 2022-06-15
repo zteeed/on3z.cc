@@ -10,9 +10,10 @@
 package swagger
 
 import (
-	"github.com/go-pg/pg/v10"
 	"net/http"
 	"strings"
+
+	"github.com/go-pg/pg/v10"
 )
 
 type Route struct {
@@ -28,16 +29,16 @@ func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
 	router := http.NewServeMux()
 	var routes = Routes{
 		Route{
-			"CreateNewShortURL",
+			"DataShortenHandler",
 			strings.ToUpper("Post"),
 			"/data/shorten",
-			&CreateNewShortURL{db, baseUrl},
+			&DataShortenHandler{db, baseUrl},
 		},
 		Route{
-			"ReturnLongURL",
+			"RootHandler",
 			strings.ToUpper("Get"),
 			"/",
-			&ReturnLongURL{db},
+			&RootHandler{db},
 		},
 	}
 	for _, route := range routes {

@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	sw "llil.gq/go"
-	"log"
-	"net/http"
 )
 
 type App struct {
@@ -39,14 +41,16 @@ func (a *App) Initialize(host string, port string, user string, password string,
 		Password: password,
 		Database: dbname,
 	})
-	// defer db.Close()
 
 	err := createSchema(db)
 	if err != nil {
-		panic(err)
+		time.Sleep(2 * time.Second)
+		a.Initialize(host, port, user, password, dbname, baseUrl)
+		log.Fatal(err)
 	}
 
 	a.Router = sw.NewRouter(db, baseUrl)
+	a.DB = db
 }
 
 func (a *App) Run(addr string) {

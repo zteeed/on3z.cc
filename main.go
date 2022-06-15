@@ -10,14 +10,10 @@
 package main
 
 import (
-	"github.com/joho/godotenv"
 	"os"
-	"time"
 )
 
 func main() {
-	_ = godotenv.Load()
-	time.Sleep(5 * time.Second)
 	app := App{}
 	app.Initialize(
 		os.Getenv("APP_DB_HOST"),
@@ -26,5 +22,7 @@ func main() {
 		os.Getenv("APP_DB_PASSWORD"),
 		os.Getenv("APP_DB_NAME"),
 		os.Getenv("APP_BASE_URL"))
+
+	defer app.DB.Close()
 	app.Run("0.0.0.0:8888")
 }

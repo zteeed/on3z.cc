@@ -12,14 +12,14 @@ package swagger
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-pg/pg/v10"
-	"github.com/xyproto/randomstring"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/go-pg/pg/v10"
 )
 
-type CreateNewShortURL struct {
+type DataShortenHandler struct {
 	db      *pg.DB
 	baseUrl string
 }
@@ -35,7 +35,7 @@ func FormatResponse(baseUrl string, shortURL string) []byte {
 	return jsonResponse
 }
 
-func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *DataShortenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST,OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers")
@@ -60,6 +60,14 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	shortURL := h.generateShortUrl(data)
+
+	w.WriteHeader(http.StatusCreated)
+	jsonResponse := FormatResponse(h.baseUrl, shortURL)
+	w.Write(jsonResponse)
+}
+
+func (h *DataShortenHandler) generateShortUrl(data longUrlPayload) string {
 	shortURL := computeShortURL(data.LongURL)
 	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
 	if !shortUrlExist {
@@ -68,18 +76,11 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if shortUrlMap.LongURL != data.LongURL {
 			newShortUrlDoesNotExist := true
 			for newShortUrlDoesNotExist {
-				fmt.Println("Hash collision detected")
-				fmt.Printf("Payload: %v\n", data.LongURL)
-				fmt.Printf("DB: %v - %v\n", shortUrlMap.LongURL, shortUrlMap.ShortURL)
-				shortURL = computeShortURL(randomstring.CookieFriendlyString(10) + data.LongURL)
+				shortURL = computeShortURL(h.baseUrl + data.LongURL)
 				newShortUrlDoesNotExist, shortUrlMap = selectShortURL(h.db, shortURL)
-				fmt.Printf("New shortURL: %v\n", shortUrlMap.ShortURL)
 			}
 			addShortUrl(h.db, data.LongURL, shortURL)
 		}
 	}
-
-	w.WriteHeader(http.StatusCreated)
-	jsonResponse := FormatResponse(h.baseUrl, shortURL)
-	w.Write(jsonResponse)
+	return shortURL
 }
