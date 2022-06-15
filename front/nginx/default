@@ -1,0 +1,26 @@
+server {
+        listen 80 default_server;
+        server_name  localhost;
+
+        location / {
+            root /usr/share/nginx/html;
+            error_page 404 /404.html;
+            index index.html;
+        }
+
+        location ~ ^/(404|index) {
+            root /usr/share/nginx/html;
+            error_page 404 /404.html;
+            index 404.html;
+        }
+
+        location ~* \.(js|jpg|png|css)$ {
+            root /usr/share/nginx/html;
+        }
+
+        location ~ ^/([A-Za-z0-9\/]+) {
+           rewrite ^/([A-Za-z0-9\/]+) /$1 break;
+           proxy_pass  http://api:8888;
+        }
+
+}

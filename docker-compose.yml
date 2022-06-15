@@ -1,0 +1,29 @@
+version: '2'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=docker
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+  front:
+    build: front
+    restart: always
+    ports:
+      - "0.0.0.0:80:80"
+  api:
+    build: .
+    depends_on:
+      - db
+      - front
+    restart: always
+    environment:
+      - APP_DB_HOST=db
+      - APP_DB_PORT=5432
+      - APP_DB_USERNAME=postgres
+      - APP_DB_PASSWORD=$POSTGRES_PASSWORD
+      - APP_DB_NAME=docker
+      - APP_BASE_URL=https://llil.gq
+    ports:
+      - "127.0.0.1:8888:8888"

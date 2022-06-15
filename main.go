@@ -12,10 +12,12 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"os"
+	"time"
 )
 
 func main() {
 	_ = godotenv.Load()
+	time.Sleep(5 * time.Second)
 	app := App{}
 	app.Initialize(
 		os.Getenv("APP_DB_HOST"),
