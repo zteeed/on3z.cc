@@ -90,28 +90,3 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write(jsonResponse)
 }
-
-type ReturnLongURL struct {
-	db      *pg.DB
-	baseUrl string
-}
-
-func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	if r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-	shortURL := strings.TrimPrefix(r.URL.Path, "/")
-	fmt.Println(shortURL)
-	shortUrlMap := new(ShortUrlMap)
-	err := h.db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
-	fmt.Println(err)
-	fmt.Println(shortUrlMap)
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	w.Header().Set("Location", shortUrlMap.LongURL)
-	w.WriteHeader(301)
-}
