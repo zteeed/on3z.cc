@@ -31,13 +31,13 @@ func NewRouter(db *pg.DB, baseUrl string) *http.ServeMux {
 		Route{
 			"CreateNewShortURL",
 			strings.ToUpper("Post"),
-			"/api/v1/data/shorten",
+			"/data/shorten",
 			&CreateNewShortURL{db, baseUrl},
 		},
 		Route{
 			"ReturnLongURL",
 			strings.ToUpper("Get"),
-			"/api/v1/{shortUrl}",
+			"/",
 			&ReturnLongURL{db, baseUrl},
 		},
 	}

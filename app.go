@@ -39,7 +39,7 @@ func (a *App) Initialize(host string, port string, user string, password string,
 		Password: password,
 		Database: dbname,
 	})
-	defer db.Close()
+	// defer db.Close()
 
 	err := createSchema(db)
 	if err != nil {

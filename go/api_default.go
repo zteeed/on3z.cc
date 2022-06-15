@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-pg/pg/v10"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -61,10 +62,33 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(data.LongURL)
 	shortURL := computeShortURL(data.LongURL)
-	fmt.Println(h.baseUrl + "/" + shortURL)
+	shortUrlMap := new(ShortUrlMap)
+	err = h.db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
+	if err != nil {
+		shortUrlMapInsert := &ShortUrlMap{
+			LongURL:  data.LongURL,
+			ShortURL: shortURL,
+		}
+		_, err := h.db.Model(shortUrlMapInsert).Insert()
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		if shortUrlMap.LongURL != data.LongURL {
+			// TODO: Manage hash collision
+		}
+	}
+
 	w.WriteHeader(http.StatusCreated)
+	response := make(map[string]string)
+	shortURLResponse := fmt.Sprintf("%s/%s", h.baseUrl, shortURL)
+	response["shortURL"] = shortURLResponse
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResponse)
 }
 
 type ReturnLongURL struct {
@@ -78,5 +102,16 @@ func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	shortURL := strings.TrimPrefix(r.URL.Path, "/")
+	fmt.Println(shortURL)
+	shortUrlMap := new(ShortUrlMap)
+	err := h.db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
+	fmt.Println(err)
+	fmt.Println(shortUrlMap)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Location", shortUrlMap.LongURL)
+	w.WriteHeader(301)
 }
