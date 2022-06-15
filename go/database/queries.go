@@ -1,7 +1,6 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 )
@@ -19,12 +18,14 @@ func AddShortUrl(database Database, longURL string, shortURL string) {
 	}
 }
 
-func DeleteAll(database Database) sql.Result {
+func DeleteAll(database Database) {
 	result, err := database.StatementDeleteAll.Exec()
 	if err != nil {
 		log.Fatal(err)
 	}
-	rowsAffected, err := result.RowsAffected()
+	rowsAffected, _ := result.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Rows deleted: ", rowsAffected)
-	return result
 }
