@@ -17,6 +17,7 @@ jobs:
         now=$(date +%Y-%m-%d-%H-%M-%S)
         echo "IMAGE_VERSION_API=${{ secrets.DOCKERHUB_USERNAME }}/llilgq_api:$now" >> $GITHUB_ENV
         echo "IMAGE_VERSION_FRONT=${{ secrets.DOCKERHUB_USERNAME }}/llilgq_front:$now" >> $GITHUB_ENV
+        echo "IMAGE_VERSION_DB=${{ secrets.DOCKERHUB_USERNAME }}/llilgq_db:$now" >> $GITHUB_ENV
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
     - name: Login to DockerHub
@@ -29,6 +30,7 @@ jobs:
         docker-compose build
         docker tag llilgq_api ${{ env.IMAGE_VERSION_API }} 
         docker tag llilgq_front ${{ env.IMAGE_VERSION_FRONT }}
+        docker tag llilgq_db ${{ env.IMAGE_VERSION_DB }}
     - name: Push API
       uses: docker/build-push-action@v3
       with:
@@ -39,10 +41,16 @@ jobs:
       with:
         push: true
         tags: ${{ env.IMAGE_VERSION_FRONT }}
+    - name: Push Front
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: ${{ env.IMAGE_VERSION_DB }}
     - name: Set artifact
       run: |
         echo ${{ env.IMAGE_VERSION_API }} > version_api.txt
         echo ${{ env.IMAGE_VERSION_FRONT }} > version_front.txt
+        echo ${{ env.IMAGE_VERSION_DB }} > version_db.txt
     - uses: actions/upload-artifact@v2
       with:
         name: image-version
@@ -51,6 +59,10 @@ jobs:
       with:
         name: image-version
         path: version_front.txt
+    - uses: actions/upload-artifact@v2
+      with:
+        name: image-version
+        path: version_db.txt
   deploy:
     needs: build
     runs-on: self-hosted
