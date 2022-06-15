@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-pg/pg/v10"
+	"github.com/xyproto/randomstring"
 	"log"
 	"net/http"
 	"net/url"
@@ -58,8 +59,15 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		addShortUrl(h.db, data.LongURL, shortURL)
 	} else {
 		if shortUrlMap.LongURL != data.LongURL {
-			// TODO: Manage hash collision
-			fmt.Println("COLLISION")
+			newShortUrlDoesNotExist := true
+			for newShortUrlDoesNotExist {
+				fmt.Println("Hash collision detected")
+				fmt.Printf("Payload: %v\n", data.LongURL)
+				fmt.Printf("DB: %v - %v\n", shortUrlMap.LongURL, shortUrlMap.ShortURL)
+				shortURL := computeShortURL(randomstring.CookieFriendlyString(10) + data.LongURL)
+				newShortUrlDoesNotExist, shortUrlMap = selectShortURL(h.db, shortURL)
+			}
+			addShortUrl(h.db, data.LongURL, shortURL)
 		}
 	}
 

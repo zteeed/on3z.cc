@@ -6,7 +6,7 @@ import (
 
 func selectShortURL(db *pg.DB, shortURL string) (bool, *ShortUrlMap) {
 	shortUrlMap := new(ShortUrlMap)
-	err := db.Model(shortUrlMap).Where("short_url = ?", shortURL).Select()
+	err := db.Model(shortUrlMap).Limit(1).Where("short_url = ?", shortURL).Select()
 	shortUrlExist := err == nil
 	return shortUrlExist, shortUrlMap
 }
