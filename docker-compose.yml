@@ -7,11 +7,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - /home/user/database:/var/lib/postgresql
   front:
     build: front
     restart: always
     ports:
-      - "0.0.0.0:80:80"
+      - "0.0.0.0:8080:80"
   api:
     build: .
     depends_on:
