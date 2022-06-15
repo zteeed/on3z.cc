@@ -35,7 +35,8 @@ func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	shortURL := strings.TrimPrefix(r.URL.Path, "/")
 	shortUrlExist, shortUrlMap := selectShortURL(h.db, shortURL)
 	if !shortUrlExist {
-		w.WriteHeader(http.StatusNotFound)
+		w.Header().Set("Location", "/404.html")
+		w.WriteHeader(302)
 		return
 	}
 	w.Header().Set("Location", shortUrlMap.LongURL)
