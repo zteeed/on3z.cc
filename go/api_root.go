@@ -20,6 +20,13 @@ type ReturnLongURL struct {
 }
 
 func (h *ReturnLongURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET,OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers")
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)

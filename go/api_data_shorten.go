@@ -36,6 +36,13 @@ func FormatResponse(baseUrl string, shortURL string) []byte {
 }
 
 func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST,OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers")
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
