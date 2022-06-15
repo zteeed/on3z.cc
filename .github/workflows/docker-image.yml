@@ -46,7 +46,11 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: image-version
-        path: version.txt
+        path: version_api.txt
+    - uses: actions/upload-artifact@v2
+      with:
+        name: image-version
+        path: version_front.txt
   deploy:
     needs: build
     runs-on: self-hosted
