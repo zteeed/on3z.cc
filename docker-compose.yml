@@ -7,8 +7,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-    #volumes:
-    #  - /home/user/database:/var/lib/postgresql
+    volumes:
+      - /home/user/database:/var/lib/postgresql
   front:
     build: front
     depends_on:
