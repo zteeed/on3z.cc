@@ -71,8 +71,9 @@ func (h *CreateNewShortURL) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				fmt.Println("Hash collision detected")
 				fmt.Printf("Payload: %v\n", data.LongURL)
 				fmt.Printf("DB: %v - %v\n", shortUrlMap.LongURL, shortUrlMap.ShortURL)
-				shortURL := computeShortURL(randomstring.CookieFriendlyString(10) + data.LongURL)
+				shortURL = computeShortURL(randomstring.CookieFriendlyString(10) + data.LongURL)
 				newShortUrlDoesNotExist, shortUrlMap = selectShortURL(h.db, shortURL)
+				fmt.Printf("New shortURL: %v\n", shortUrlMap.ShortURL)
 			}
 			addShortUrl(h.db, data.LongURL, shortURL)
 		}
