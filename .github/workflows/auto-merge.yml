@@ -21,7 +21,7 @@ jobs:
           exit 1
       - name: Run tests
         run: |
-          go test -v $PWD/go
+          /usr/local/go/bin/go test -v $PWD/go
   worker:
     runs-on: ubuntu-latest
 

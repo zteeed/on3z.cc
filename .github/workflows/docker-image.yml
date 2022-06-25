@@ -20,7 +20,7 @@ jobs:
           -it postgres:14.1-alpine
       - name: Run tests
         run: |
-          go test -v $PWD/go
+          /usr/local/go/bin/go test -v $PWD/go
   build:
     needs: tests
     runs-on: ubuntu-latest
