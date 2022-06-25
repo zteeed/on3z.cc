@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Deploy basic-postgres for tests if not exists
         run: >-
-          docker container inspect basic-postgres >/dev/null ||
+          docker rm -f basic-postgres &&
           docker run -d -p 127.0.0.1:5432:5432 --name basic-postgres 
           --restart always -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
           -it postgres:14.1-alpine
@@ -21,6 +21,8 @@ jobs:
           exit 1
       - name: Run tests
         run: |
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE docker;"
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U postgres -f $PWD/db/init.sql
           /usr/local/go/bin/go test -v $PWD/go
   worker:
     runs-on: ubuntu-latest
