@@ -21,6 +21,7 @@ jobs:
           exit 1
       - name: Run tests
         run: |
+          bash -c 'while !</dev/tcp/127.0.0.1/5432; do sleep 1; done'
           PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U postgres -c "CREATE DATABASE docker;"
           PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U postgres -f $PWD/db/init.sql
           /usr/local/go/bin/go test -v $PWD/go
