@@ -52,3 +52,9 @@ $ curl https://llil.gq/8kg18UG -v
 
 ![](.img/error_404_page.png)
 
+## Prometheus' metrics and Grafana dashboards
+
+Reference:
+[https://github.com/brancz/prometheus-example-app/]()
+
+![](./.img/grafana-dashboards.png)

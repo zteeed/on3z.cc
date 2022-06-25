@@ -29,4 +29,4 @@ services:
       - APP_DB_NAME=docker
       - APP_BASE_URL=https://llil.gq
     ports:
-      - "127.0.0.1:8888:8888"
+      - "0.0.0.0:8888:8888"

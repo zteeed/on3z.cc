@@ -8,7 +8,7 @@ server {
             index index.html;
         }
 
-        location ~ ^/(404|index) {
+        location ~ ^/(404|index|metrics) {
             root /usr/share/nginx/html;
             error_page 404 /404.html;
             index 404.html;
