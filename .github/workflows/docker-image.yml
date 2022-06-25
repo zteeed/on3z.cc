@@ -22,6 +22,7 @@ jobs:
         run: |
           go test -v $PWD/go
   build:
+    needs: tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
