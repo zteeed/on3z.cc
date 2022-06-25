@@ -15,7 +15,7 @@ jobs:
       - name: Deploy basic-postgres for tests if not exists
         run: >-
           docker container inspect basic-postgres >/dev/null ||
-          docker docker run -d -p 127.0.0.1:5432:5432 --name basic-postgres 
+          docker run -d -p 127.0.0.1:5432:5432 --name basic-postgres 
           --restart always -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
           -it postgres:14.1-alpine
       - name: Run tests
