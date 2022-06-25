@@ -1,4 +1,4 @@
-package swagger
+package app
 
 import (
 	"github.com/stretchr/testify/assert"

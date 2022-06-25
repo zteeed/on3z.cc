@@ -9,9 +9,9 @@ COPY main.go .
 ENV CGO_ENABLED=0
 RUN go get -d -v ./...
 
-RUN go build -a -installsuffix cgo -o swagger .
+RUN go build -a -installsuffix cgo -o main .
 
 FROM scratch AS runtime
-COPY --from=build /go/src/swagger ./
+COPY --from=build /go/src/main ./
 EXPOSE 8888/tcp
-ENTRYPOINT ["./swagger"]
+ENTRYPOINT ["./main"]
