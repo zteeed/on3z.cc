@@ -57,4 +57,4 @@ $ curl https://llil.gq/8kg18UG -v
 Reference:
 [https://github.com/brancz/prometheus-example-app/]()
 
-![](./.img/grafana-dashboards.png)
+![](./.img/grafana-dashboard.png)
