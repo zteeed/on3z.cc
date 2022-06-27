@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     volumes:
-      - /tmp/home/user/database:/var/lib/postgresql
+      - /home/user/database:/var/lib/postgresql
   db_exporter:
     image: bitnami/postgres-exporter
     depends_on:
