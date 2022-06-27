@@ -8,7 +8,16 @@ services:
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     volumes:
-      - /home/user/database:/var/lib/postgresql
+      - /tmp/home/user/database:/var/lib/postgresql
+  db_exporter:
+    image: bitnami/postgres-exporter
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:$POSTGRES_PASSWORD@db:5432/postgres?sslmode=disable
+    ports:
+      - "0.0.0.0:9187:9187"
   front:
     build: front
     depends_on:
