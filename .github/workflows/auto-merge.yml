@@ -14,11 +14,6 @@ jobs:
           docker run -d -p 127.0.0.1:5432:5432 --name basic-postgres 
           --restart always -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD 
           -it postgres:14.1-alpine
-      - name: Display go.mod
-        run: |
-          cat go.mod
-          git rev-parse --abbrev-ref HEAD
-          exit 1
       - name: Run tests
         run: |
           bash -c 'while !</dev/tcp/127.0.0.1/5432; do sleep 1; done'
@@ -27,8 +22,8 @@ jobs:
           PGPASSWORD=$POSTGRES_PASSWORD psql -h 127.0.0.1 -U postgres -f $PWD/db/init.sql
           /usr/local/go/bin/go test -v $PWD/go
   worker:
+    needs: tests
     runs-on: ubuntu-latest
-
     if: github.actor == 'dependabot[bot]'
     steps:
       - name: automerge
