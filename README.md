@@ -55,6 +55,6 @@ $ curl https://llil.gq/8kg18UG -v
 ## Prometheus' metrics and Grafana dashboards
 
 Reference:
-[https://github.com/brancz/prometheus-example-app/]()
+[https://github.com/brancz/prometheus-example-app/](https://github.com/brancz/prometheus-example-app/)
 
 ![](./.img/grafana-dashboard.png)
