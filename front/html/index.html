@@ -85,7 +85,7 @@ form.onsubmit = function(e) {
     const data = JSON.stringify(params);
     xhttp.send(data);
     xhttp.onload = function() {
-        if (this.status == 201) {
+        if (this.status === 201) {
             const result = JSON.parse(this.responseText);
             Swal.fire({
                 title: 'Success!',
