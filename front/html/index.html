@@ -61,6 +61,26 @@
                             <div class="field">
                             </div>
                         </form>
+                        <div>
+                            <!-- -->
+                            <button id="btn-login" disabled="true" onclick="login()">Log in</button>
+                            <button id="btn-logout" disabled="true" onclick="logout()">Log out</button>
+                            <div class="hidden" id="gated-content">
+                                <p>
+                                    You're seeing this content because you're currently
+                                    <strong>logged in</strong>.
+                                </p>
+                                <label>
+                                    Access token:
+                                    <pre id="ipt-access-token"></pre>
+                                </label>
+                                <label>
+                                    User profile:
+                                    <pre id="ipt-user-profile"></pre>
+                                </label>
+                            </div>
+                            <!-- -->
+                        </div>
                     </div>
                 </div>
                 <div class="footer-link padding-top--48">
@@ -72,36 +92,9 @@
         </div>
     </div>
 </div>
-</body>
 
+<script src="https://cdn.auth0.com/js/auth0-spa-js/1.20/auth0-spa-js.production.js"></script>
+<script src="/js/auth0.js"></script>
+<script src="/js/notification.js"></script>
+</body>
 </html>
-<script>
-var form = document.getElementById('generate-short-url');
-form.onsubmit = function(e) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/data/shorten", true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    const params = {"longURL": document.getElementById("url").value};
-    const data = JSON.stringify(params);
-    xhttp.send(data);
-    xhttp.onload = function() {
-        if (this.status === 201) {
-            const result = JSON.parse(this.responseText);
-            Swal.fire({
-                title: 'Success!',
-                html: 'Here is your short link: <u><a href="' + result.shortURL + '">'  +result.shortURL + '</a></u>',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            })
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Cannot generate short url for now. Try again later',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            })
-        }
-    }
-    e.preventDefault();
-};
-</script>
