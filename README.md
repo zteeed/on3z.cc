@@ -58,3 +58,10 @@ Reference:
 [https://github.com/brancz/prometheus-example-app/](https://github.com/brancz/prometheus-example-app/)
 
 ![](./.img/grafana-dashboard.png)
+
+## Misc
+
+### Refences
+ 
+- [https://ckinan.com/blog/auth0-simple-example-vanilla-js/](https://ckinan.com/blog/auth0-simple-example-vanilla-js/)
+
