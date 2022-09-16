@@ -19,8 +19,8 @@ func (a *App) Initialize(baseUrl string) {
 	err := db.Ping()
 	if err != nil {
 		time.Sleep(2 * time.Second)
+		log.Printf(err.Error())
 		a.Initialize(baseUrl)
-		log.Fatal(err)
 	}
 	dbObject := database.InitializeDatabase(db)
 	a.Database = dbObject
