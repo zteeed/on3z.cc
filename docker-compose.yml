@@ -37,5 +37,7 @@ services:
       - APP_DB_PASSWORD=$POSTGRES_PASSWORD
       - APP_DB_NAME=docker
       - APP_BASE_URL=https://llil.gq
+      - AUTH0_DOMAIN=llilgq.eu.auth0.com
+      - AUTH0_AUDIENCE=https://llilgq.eu.auth0.com/api/v2/
     ports:
       - "0.0.0.0:8888:8888"

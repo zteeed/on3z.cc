@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"llil.gq/go/database"
@@ -36,7 +37,7 @@ var (
 	}, []string{"code", "handler", "method"})
 )
 
-func NewRouter(db database.Database, baseUrl string) *http.ServeMux {
+func NewRouter(db database.Database, jwtValidator *validator.Validator, baseUrl string) *http.ServeMux {
 	router := http.NewServeMux()
 
 	r := prometheus.NewRegistry()
@@ -50,7 +51,7 @@ func NewRouter(db database.Database, baseUrl string) *http.ServeMux {
 			"/data/shorten",
 			promhttp.InstrumentHandlerDuration(
 				httpRequestDuration.MustCurryWith(prometheus.Labels{"handler": "/data/shorten"}),
-				promhttp.InstrumentHandlerCounter(httpRequestsTotal, &DataShortenHandler{db, baseUrl}),
+				promhttp.InstrumentHandlerCounter(httpRequestsTotal, &DataShortenHandler{db, jwtValidator, baseUrl}),
 			),
 		},
 		Route{

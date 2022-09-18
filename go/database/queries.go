@@ -7,12 +7,18 @@ import (
 
 func SelectShortURL(database Database, shortURL string) (ShortURLMapping, error) {
 	result := ShortURLMapping{}
-	err := database.StatementSelectShortURLMapping.QueryRow(shortURL).Scan(&result.ShortURL, &result.LongURL)
+	err := database.StatementSelectShortURLMapping.QueryRow(shortURL).Scan(&result.ShortURL, &result.LongURL, &result.Auth0Sub)
 	return result, err
 }
 
-func AddShortUrl(database Database, longURL string, shortURL string) {
-	_, err := database.StatementAddShortURLMapping.Exec(shortURL, longURL)
+func SelectShortURLByUser(database Database, shortURL string, auth0Sub string) (ShortURLMapping, error) {
+	result := ShortURLMapping{}
+	err := database.StatementSelectShortURLMappingAuthenticated.QueryRow(shortURL, auth0Sub).Scan(&result.ShortURL, &result.LongURL, &result.Auth0Sub)
+	return result, err
+}
+
+func AddShortUrl(database Database, longURL string, shortURL string, auth0Sub string) {
+	_, err := database.StatementAddShortURLMapping.Exec(shortURL, longURL, auth0Sub)
 	if err != nil {
 		log.Fatal(err)
 	}

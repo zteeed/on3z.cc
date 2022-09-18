@@ -1,8 +1,11 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/auth0/go-jwt-middleware/v2/validator"
+	extract "github.com/golang-jwt/jwt/v4"
 	"llil.gq/go/database"
 	"log"
 	"net/http"
@@ -10,8 +13,9 @@ import (
 )
 
 type DataShortenHandler struct {
-	database database.Database
-	baseUrl  string
+	database     database.Database
+	jwtValidator *validator.Validator
+	baseUrl      string
 }
 
 func FormatResponse(baseUrl string, shortURL string) []byte {
@@ -34,6 +38,24 @@ func (h *DataShortenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	auth0Token := r.Header.Get("Authorization")
+	auth0Sub := ""
+	if auth0Token != "" {
+		_, err := h.jwtValidator.ValidateToken(context.Background(), auth0Token)
+		if err != nil {
+			w.WriteHeader(http.StatusForbidden)
+			return
+		}
+		token, _, err := new(extract.Parser).ParseUnverified(auth0Token, extract.MapClaims{})
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if claims, ok := token.Claims.(extract.MapClaims); ok {
+			auth0Sub = fmt.Sprint(claims["sub"])
+		}
+	}
+
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -50,6 +72,7 @@ func (h *DataShortenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	data.Auth0Sub = auth0Sub
 	shortURL := h.generateShortUrl(data)
 
 	w.WriteHeader(http.StatusCreated)
@@ -58,17 +81,17 @@ func (h *DataShortenHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *DataShortenHandler) generateShortUrl(data longUrlPayload) string {
-	shortURL := computeShortURL(data.LongURL)
+	shortURL := computeShortURL(data.Auth0Sub + data.LongURL)
 	result, err := database.SelectShortURL(h.database, shortURL)
 	if err != nil {
-		database.AddShortUrl(h.database, data.LongURL, shortURL)
+		database.AddShortUrl(h.database, data.LongURL, shortURL, data.Auth0Sub)
 	} else {
 		if result.LongURL != data.LongURL {
 			for err == nil {
-				shortURL = computeShortURL(h.baseUrl + data.LongURL)
+				shortURL = computeShortURL(h.baseUrl + data.Auth0Sub + data.LongURL)
 				result, err = database.SelectShortURL(h.database, shortURL)
 			}
-			database.AddShortUrl(h.database, data.LongURL, shortURL)
+			database.AddShortUrl(h.database, data.LongURL, shortURL, data.Auth0Sub)
 		}
 	}
 	return shortURL
