@@ -30,14 +30,26 @@ func InitializeDatabase(db *sql.DB) Database {
 	if err != nil {
 		panic(err)
 	}
+	StatementListShortURLMappingAuthenticated, err := db.Prepare(
+		"SELECT short_url, long_url FROM short_url_maps WHERE auth0_sub = $1 LIMIT $2 OFFSET $3;",
+	)
+	if err != nil {
+		panic(err)
+	}
 	StatementSelectShortURLMappingAuthenticated, err := db.Prepare(
-		"SELECT short_url, long_url, auth0_sub FROM short_url_maps WHERE short_url = $1 AND auth0_sub = $2 LIMIT 1;",
+		"SELECT short_url, long_url FROM short_url_maps WHERE short_url = $1 AND auth0_sub = $2 LIMIT 1;",
 	)
 	if err != nil {
 		panic(err)
 	}
 	StatementAddShortURLMapping, err := db.Prepare(
 		"INSERT INTO short_url_maps (short_url, long_url, auth0_sub) VALUES ($1, $2, $3);",
+	)
+	if err != nil {
+		panic(err)
+	}
+	StatementUpdateShortURLMapping, err := db.Prepare(
+		"UPDATE short_url_maps SET long_url = $1 WHERE short_url = $2 AND auth0_sub = $3;",
 	)
 	if err != nil {
 		panic(err)
@@ -51,8 +63,10 @@ func InitializeDatabase(db *sql.DB) Database {
 	return Database{
 		DB:                             db,
 		StatementSelectShortURLMapping: StatementSelectShortURLMapping,
+		StatementListShortURLMappingAuthenticated:   StatementListShortURLMappingAuthenticated,
 		StatementSelectShortURLMappingAuthenticated: StatementSelectShortURLMappingAuthenticated,
 		StatementAddShortURLMapping:                 StatementAddShortURLMapping,
+		StatementUpdateShortURLMapping:              StatementUpdateShortURLMapping,
 		StatementDeleteAll:                          StatementDeleteAll,
 	}
 }

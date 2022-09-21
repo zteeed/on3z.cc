@@ -30,7 +30,7 @@ func newTestDataShortenHandler(t *testing.T) *DataShortenHandler {
 func TestCreateNewShortURL_generateShortUrl(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		h := newTestDataShortenHandler(t)
-		res := h.generateShortUrl(longUrlPayload{
+		res := h.generateShortUrl(POSTPayload{
 			LongURL: "longurl",
 		})
 		assert.Len(t, res, 7)
@@ -39,8 +39,8 @@ func TestCreateNewShortURL_generateShortUrl(t *testing.T) {
 	t.Run("Collision", func(t *testing.T) {
 		h := newTestDataShortenHandler(t)
 
-		database.AddShortUrl(h.database, "url", "IjZEPut")
-		res := h.generateShortUrl(longUrlPayload{
+		database.AddShortUrl(h.database, "url", "IjZEPut", "")
+		res := h.generateShortUrl(POSTPayload{
 			LongURL: "longurl",
 		})
 		assert.Len(t, res, 7)
