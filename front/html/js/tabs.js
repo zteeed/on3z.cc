@@ -1,6 +1,8 @@
 function show_tab_content() {
     let current_pane = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).substring(1);
     current_pane = current_pane === "" ? "home" : current_pane
+    const query = window.location.search
+    current_pane = (query.includes("code=") && query.includes("state=")) ? "home" : current_pane
     $(".tab-pane").each(function () {
         let dom_pane_id = $(this).attr('id');
         if ("tab-content-" + current_pane === dom_pane_id) {
