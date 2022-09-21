@@ -1,0 +1,49 @@
+table.dataTable thead th {
+    text-align: center;
+}
+
+.table thead th {
+    vertical-align: middle;
+}
+
+.table {
+    width: 100% !important;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+table.dataTable tr td {
+    text-align: center;
+}
+
+td {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:not(.previous):not(.next) {
+    padding: 0.1em;
+    background-color: rgb(84, 105, 212) !important;
+    box-shadow: rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 12%) 0 1px 1px 0, rgb(84 105 212) 0 0 0 1px, rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 0%) 0 0 0 0, rgb(60 66 87 / 8%) 0 2px 5px 0;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:not(.previous):not(.next) {
+    background-color: rgb(32, 45, 99) !important;
+    border-color: rgb(32, 45, 99);
+    box-shadow: rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 12%) 0 1px 1px 0, rgb(32, 45, 99) 0 0 0 1px, rgb(0 0 0 / 0%) 0 0 0 0, rgb(0 0 0 / 0%) 0 0 0 0, rgb(60 66 87 / 8%) 0 2px 5px 0;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.paginate_button.disabled) {
+    background-image: linear-gradient(rgb(84, 105, 212) 0%, rgb(32, 45, 99) 100%);
+    background-color: rgb(32, 45, 99) !important;
+    color: #ffffff;
+}
+
+i {
+    color: #ffffff !important;
+}

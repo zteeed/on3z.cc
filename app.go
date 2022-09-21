@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/auth0/go-jwt-middleware/v2/validator"
+	"llil.gq/go/auth0"
 	"log"
 	"net/http"
 	"time"
@@ -10,8 +12,9 @@ import (
 )
 
 type App struct {
-	Router   *http.ServeMux
-	Database database.Database
+	Router       *http.ServeMux
+	Database     database.Database
+	JwtValidator *validator.Validator
 }
 
 func (a *App) Initialize(baseUrl string) {
@@ -24,7 +27,8 @@ func (a *App) Initialize(baseUrl string) {
 	}
 	dbObject := database.InitializeDatabase(db)
 	a.Database = dbObject
-	a.Router = sw.NewRouter(dbObject, baseUrl)
+	a.JwtValidator = auth0.GetJwtValidator()
+	a.Router = sw.NewRouter(dbObject, a.JwtValidator, baseUrl)
 }
 
 func (a *App) Run(addr string) {

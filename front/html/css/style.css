@@ -108,7 +108,7 @@ a {
 .formbg {
     margin: 0 auto;
     width: 100%;
-    max-width: 448px;
+    max-width: 848px;
     background: white;
     border-radius: 4px;
     box-shadow: rgba(60, 66, 87, 0.12) 0 7px 14px 0, rgba(0, 0, 0, 0.12) 0 3px 6px 0;
@@ -137,7 +137,7 @@ label {
     align-items: center;
 }
 
-.field input {
+.field input,button {
     font-size: 16px;
     line-height: 28px;
     padding: 8px 16px;
@@ -156,7 +156,7 @@ label {
     rgba(0, 0, 0, 0) 0 0 0 0;
 }
 
-input[type="submit"] {
+input[type="submit"],button[type="submit"] {
     background-color: rgb(84, 105, 212);
     box-shadow: rgba(0, 0, 0, 0) 0 0 0 0,
     rgba(0, 0, 0, 0) 0 0 0 0,
