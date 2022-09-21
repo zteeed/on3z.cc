@@ -11,7 +11,8 @@ const configureClient = async () => {
         domain: "llilgq.eu.auth0.com",
         client_id: "32DMIWDgPTwointJxN8exbcJtj1Wpqeo",
         audience: "https://llilgq.eu.auth0.com/api/v2/",
-        cacheLocation: "localstorage"
+        cacheLocation: "localstorage",
+        leeway: 180
     })
 }
 
