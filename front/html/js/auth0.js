@@ -44,6 +44,7 @@ function loadTable(token) {
             }
         },
         "rowCallback": function (row, data) {
+            $('td:eq(0)', row).html('<a href="' + window.location.origin + '/' + data.ShortURL + '">' + data.ShortURL + '</a>');
             $('td:eq(1)', row).html('<a href="' + data.LongURL + '">' + data.LongURL + '</a>');
             $('td:eq(2)', row).html(`
                 <div class=\"field\"><button type=\"submit\" onclick='editURL(this, "` + token + `", "` + data.ShortURL + `", "` + data.LongURL + `")'><i class=\"fa-solid fa-pencil\"></i></button></div>

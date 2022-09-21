@@ -44,8 +44,8 @@ function editURL(e, token, shortURL, longURL) {
     Swal.fire({
         title: 'Edit the URL destination',
         html:
-            'You are going to update the following short url: <b><u>' + window.location.origin + '/' + shortURL + '</u></b><br><br>' +
-            'Previous longURL for this short link is: <b><u>' + longURL + '</u></b><br><br>' +
+            'You are going to update the following short url: <b><u><a href="' + window.location.origin + '/' + shortURL + '">' + window.location.origin + '/' + shortURL + '</a></u></b><br><br>' +
+            'Previous longURL for this short link is: <b><u><a href="' + longURL + '">' + longURL + '</a></u></b><br><br>' +
             'Enter the new longURL to associate:',
         input: 'text',
         inputAttributes: {
@@ -79,13 +79,15 @@ function editURL(e, token, shortURL, longURL) {
             })
         },
         allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
+    }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire({
                 title: 'Success!',
-                html: 'Short link destination successfully updated for <b><u>' + window.location.origin + '/' + shortURL + '</u></b>',
+                html: 'Short link destination successfully updated for <b><u><a href="' + window.location.origin + '/' + shortURL + '">' + window.location.origin + '/' + shortURL + '</a></u></b>',
                 icon: 'success',
-                confirmButtonText: 'OK', }).then((result) => {location.reload()
+                confirmButtonText: 'OK',
+            }).then((result) => {
+                location.reload()
             })
             // TODO: Find a way to just reload table ajax after confirm
         }
