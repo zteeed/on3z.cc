@@ -64,4 +64,3 @@ Reference:
 ### Refences
  
 - [https://ckinan.com/blog/auth0-simple-example-vanilla-js/](https://ckinan.com/blog/auth0-simple-example-vanilla-js/)
-
