@@ -3,7 +3,7 @@ module llil.gq
 go 1.18
 
 require (
-	github.com/auth0/go-jwt-middleware/v2 v2.0.0
+	github.com/auth0/go-jwt-middleware/v2 v2.0.1
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/lib/pq v1.10.7
 	github.com/prometheus/client_golang v1.12.2
@@ -22,7 +22,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
+	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
 	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	google.golang.org/protobuf v1.26.0 // indirect
