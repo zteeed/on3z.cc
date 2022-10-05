@@ -7,7 +7,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/lib/pq v1.10.7
 	github.com/prometheus/client_golang v1.12.2
-	github.com/samber/lo v1.28.2
+	github.com/samber/lo v1.30.0
 	github.com/stretchr/testify v1.8.0
 )
 
