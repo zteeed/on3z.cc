@@ -25,7 +25,7 @@ jobs:
           sleep 8
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -c "CREATE DATABASE docker;"
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -f $PWD/db/init.sql
-          /usr/local/go/bin/go test -v $PWD/go
+          APP_DB_HOST=basic-postgres /usr/local/go/bin/go test -v $PWD/go
   build:
     needs: tests
     runs-on: ubuntu-latest
