@@ -13,9 +13,6 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - name: Display env
-        run: >-
-          env
       - name: Deploy basic-postgres for tests if not exists
         run: >-
           (docker rm -f basic-postgres || true) &&
