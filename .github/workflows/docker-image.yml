@@ -21,7 +21,7 @@ jobs:
           -it postgres:14.1-alpine
       - name: Run tests
         run: |
-          #  bash -c 'while !</dev/tcp/127.0.0.1/5433; do sleep 1; done'
+          #  bash -c 'while !</dev/tcp/basic-postgres/5432; do sleep 1; done'
           sleep 8
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -c "CREATE DATABASE docker;"
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -f $PWD/db/init.sql
