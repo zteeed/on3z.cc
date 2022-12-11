@@ -24,7 +24,7 @@ services:
       - api
     restart: always
     ports:
-      - "0.0.0.0:8080:80"
+      - "0.0.0.0:38080:80"
   api:
     build: .
     depends_on:
@@ -40,4 +40,4 @@ services:
       - AUTH0_DOMAIN=llilgq.eu.auth0.com
       - AUTH0_AUDIENCE=https://llilgq.eu.auth0.com/api/v2/
     ports:
-      - "0.0.0.0:8888:8888"
+      - "0.0.0.0:38888:8888"
