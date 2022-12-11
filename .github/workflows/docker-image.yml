@@ -22,7 +22,7 @@ jobs:
       - name: Run tests
         run: |
           #  bash -c 'while !</dev/tcp/basic-postgres/5432; do sleep 1; done'
-          sleep 8
+          sleep 20
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -c "CREATE DATABASE docker;"
           PGPASSWORD=$POSTGRES_PASSWORD psql -h basic-postgres -U postgres -f $PWD/db/init.sql
           APP_DB_HOST=basic-postgres /usr/local/go/bin/go test -v $PWD/go
