@@ -113,7 +113,7 @@ a {
     border-radius: 4px;
     box-shadow: rgba(60, 66, 87, 0.12) 0 7px 14px 0, rgba(0, 0, 0, 0.12) 0 3px 6px 0;
 }
-span {
+span.padding-bottom--15 {
     display: block;
     font-size: 20px;
     line-height: 28px;
