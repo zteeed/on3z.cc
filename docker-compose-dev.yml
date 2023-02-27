@@ -1,0 +1,45 @@
+version: '2'
+services:
+  db:
+    build: db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=docker
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+    volumes:
+      - $PWD/database/data:/var/lib/postgresql
+  db_exporter:
+    image: bitnami/postgres-exporter
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:$POSTGRES_PASSWORD@db:5432/postgres?sslmode=disable
+    ports:
+      - "0.0.0.0:9187:9187"
+  front:
+    build: front
+    depends_on:
+      - api
+    restart: always
+    ports:
+      - "0.0.0.0:38080:80"
+    volumes:
+      - $PWD/front/html:/usr/share/nginx/html
+  api:
+    build: .
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - APP_DB_HOST=db
+      - APP_DB_PORT=5432
+      - APP_DB_USERNAME=postgres
+      - APP_DB_PASSWORD=$POSTGRES_PASSWORD
+      - APP_DB_NAME=docker
+      - APP_BASE_URL=https://llil.gq
+      - AUTH0_DOMAIN=llilgq.eu.auth0.com
+      - AUTH0_AUDIENCE=https://llilgq.eu.auth0.com/api/v2/
+    ports:
+      - "0.0.0.0:38888:8888"
