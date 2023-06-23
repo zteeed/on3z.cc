@@ -8,7 +8,7 @@ services:
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
     volumes:
-      - /volume1/docker/llil.gq/database:/var/lib/postgresql
+      - /volume1/docker/on3z.cc/database:/var/lib/postgresql
   db_exporter:
     image: bitnami/postgres-exporter
     depends_on:
@@ -36,7 +36,7 @@ services:
       - APP_DB_USERNAME=postgres
       - APP_DB_PASSWORD=$POSTGRES_PASSWORD
       - APP_DB_NAME=docker
-      - APP_BASE_URL=https://llil.gq
+      - APP_BASE_URL=https://on3z.cc
       - AUTH0_DOMAIN=llilgq.eu.auth0.com
       - AUTH0_AUDIENCE=https://llilgq.eu.auth0.com/api/v2/
     ports:

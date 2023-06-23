@@ -1,4 +1,4 @@
-# llil.gq
+# on3z.cc
 
 ## Register domain on freenom
 
@@ -20,7 +20,7 @@ docker exec -it llilgq_db_1 psql -U postgres -d docker -c "select * from short_u
 
 ## Result
 
-#### Homepage - [https://llil.gq](https://llil.gq)
+#### Homepage - [https://on3z.cc](https://on3z.cc)
 
 ![](.img/homepage.png)
 
@@ -31,7 +31,7 @@ docker exec -it llilgq_db_1 psql -U postgres -d docker -c "select * from short_u
 #### Check redirection
 
 ```bash
-$ curl https://llil.gq/8kg18UG -v 
+$ curl https://on3z.cc/8kg18UG -v 
 ...
 * Mark bundle as not supporting multiuse
 < HTTP/1.1 301 Moved Permanently
@@ -45,7 +45,7 @@ $ curl https://llil.gq/8kg18UG -v
 < Access-Control-Allow-Origin: *
 < Location: https://forticlient.com/downloads
 < 
-* Connection #0 to host llil.gq left intact
+* Connection #0 to host on3z.cc left intact
 ```
 
 #### If short link does not exist

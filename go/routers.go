@@ -4,7 +4,7 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"llil.gq/go/database"
+	"on3z.cc/go/database"
 	"net/http"
 )
 

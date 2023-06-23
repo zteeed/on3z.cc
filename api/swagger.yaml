@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: https://virtserver.swaggerhub.com/zteeed/llil.gq/1.0.0
+  - url: https://virtserver.swaggerhub.com/zteeed/on3z.cc/1.0.0
     description: URL Shortener API
 paths:
   /api/v1/{shortUrl}:
@@ -61,7 +61,7 @@ components:
   schemas:
     LocationHeader:
       type: string
-      example: https://llil.gq/7vrdwOV
+      example: https://on3z.cc/7vrdwOV
     LongURLPayload:
       required:
         - longURL

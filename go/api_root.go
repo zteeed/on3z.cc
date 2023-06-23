@@ -1,7 +1,7 @@
 package app
 
 import (
-	"llil.gq/go/database"
+	"on3z.cc/go/database"
 	"net/http"
 	"strings"
 )

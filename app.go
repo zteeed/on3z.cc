@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
-	"llil.gq/go/auth0"
+	"on3z.cc/go/auth0"
 	"log"
 	"net/http"
 	"time"
 
-	sw "llil.gq/go"
-	"llil.gq/go/database"
+	sw "on3z.cc/go"
+	"on3z.cc/go/database"
 )
 
 type App struct {

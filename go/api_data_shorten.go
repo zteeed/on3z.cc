@@ -7,7 +7,7 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	extract "github.com/golang-jwt/jwt/v4"
 	"github.com/samber/lo"
-	"llil.gq/go/database"
+	"on3z.cc/go/database"
 	"log"
 	"net/http"
 	"net/url"

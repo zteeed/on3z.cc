@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/stretchr/testify/assert"
-	"llil.gq/go/database"
+	"on3z.cc/go/database"
 	"os"
 	"testing"
 )
