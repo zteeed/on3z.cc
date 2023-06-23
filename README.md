@@ -1,9 +1,5 @@
 # on3z.cc
 
-## Register domain on freenom
-
-![](.img/freenom.png)
-
 ## Deployment
 
 ```bash
@@ -15,7 +11,7 @@ docker-compose up -d
 ## Database
 
 ```bash
-docker exec -it llilgq_db_1 psql -U postgres -d docker -c "select * from short_url_maps;"
+docker exec -it on3zcc_db_1 psql -U postgres -d docker -c "select * from short_url_maps;"
 ```
 
 ## Result

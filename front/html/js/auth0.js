@@ -8,9 +8,9 @@ window.onload = async () => {
 
 const configureClient = async () => {
     auth0 = await createAuth0Client({
-        domain: "llilgq.eu.auth0.com",
-        client_id: "32DMIWDgPTwointJxN8exbcJtj1Wpqeo",
-        audience: "https://llilgq.eu.auth0.com/api/v2/",
+        domain: "on3zcc.eu.auth0.com",
+        client_id: "BWgOvVNOQglGJDK10XFNjjp7aZGmNvo4",
+        audience: "https://on3zcc.eu.auth0.com/api/v2/",
         cacheLocation: "localstorage",
         leeway: 300
     })

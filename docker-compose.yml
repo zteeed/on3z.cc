@@ -37,7 +37,7 @@ services:
       - APP_DB_PASSWORD=$POSTGRES_PASSWORD
       - APP_DB_NAME=docker
       - APP_BASE_URL=https://on3z.cc
-      - AUTH0_DOMAIN=llilgq.eu.auth0.com
-      - AUTH0_AUDIENCE=https://llilgq.eu.auth0.com/api/v2/
+      - AUTH0_DOMAIN=on3zcc.eu.auth0.com
+      - AUTH0_AUDIENCE=https://on3zcc.eu.auth0.com/api/v2/
     ports:
       - "0.0.0.0:38888:8888"
