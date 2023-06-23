@@ -7,10 +7,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=docker
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-    #  volumes:
-    #    - /volume1/docker/on3z.cc/database:/var/lib/postgresql
     volumes:
-      - $PWD/database/data:/var/lib/postgresql
+      - /volume1/docker/on3z.cc/database:/var/lib/postgresql
   db_exporter:
     image: bitnami/postgres-exporter
     depends_on:
