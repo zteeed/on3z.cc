@@ -1,3 +1,5 @@
+let dataTable = null;
+
 function show_tab_content() {
     let current_pane = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).substring(1);
     current_pane = current_pane === "" ? "home" : current_pane
@@ -13,15 +15,18 @@ function show_tab_content() {
     })
 }
 
-$('#nav-tabs a').click(function (e) {
-    // e.preventDefault();
-    $(this).tab('show');
-    show_tab_content();
-    let current_pane = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).substring(1);
-    if (current_pane === "history") {
-        // TODO: Find a way to just reload table width
-        location.reload();
+$('#nav-tabs a').click(async function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+  show_tab_content();
+  let current_pane = window.location.href.substring(window.location.href.lastIndexOf('/') + 1).substring(1);
+  if (current_pane === "history") {
+    let token = await auth0.getTokenSilently();
+    if (dataTable) {
+      dataTable.destroy();
     }
+    loadTable(token);
+  }
 });
 
 // store the currently selected tab in the hash value

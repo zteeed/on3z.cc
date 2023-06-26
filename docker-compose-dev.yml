@@ -24,7 +24,7 @@ services:
       - api
     restart: always
     ports:
-      - "0.0.0.0:38080:80"
+      - "0.0.0.0:80:80"
     volumes:
       - $PWD/front/html:/usr/share/nginx/html
   api:

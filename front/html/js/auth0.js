@@ -1,12 +1,6 @@
 let auth0 = null
 
-window.onload = async () => {
-    await configureClient()
-    await processLoginState()
-    updateUI()
-}
-
-const configureClient = async () => {
+async function configureClient() {
     auth0 = await createAuth0Client({
         domain: "on3zcc.eu.auth0.com",
         client_id: "BWgOvVNOQglGJDK10XFNjjp7aZGmNvo4",
@@ -16,7 +10,7 @@ const configureClient = async () => {
     })
 }
 
-const processLoginState = async () => {
+async function processLoginState() {
     // Check code and state parameters
     const query = window.location.search
     if (query.includes("code=") && query.includes("state=")) {
@@ -28,37 +22,48 @@ const processLoginState = async () => {
 }
 
 function loadTable(token) {
-    $('#dataTable').DataTable({
+  console.log(token);
+  $.ajax({
+    url: "/data/shorten",
+    type: "GET",
+    data: {
+        "length": 1000,
+        "offset": 0,
+    },
+    beforeSend: function (request) {
+      request.setRequestHeader("Authorization", token);
+    },
+    success: function (response) {
+      // Sort the response data in descending order
+      response.reverse();
+
+      // Initialize the DataTable with the sorted data
+      dataTable = $('#dataTable').DataTable({
         "lengthMenu": [10, 25, 50, 100],
         "pageLength": 10,
-        "ajax": {
-            "url": "/data/shorten",
-            "type": "GET",
-            "dataSrc": "",
-            "data": {
-                "length": 1000,
-                "offset": 0,
-            },
-            "beforeSend": function (request) {
-                request.setRequestHeader("Authorization", token);
-            }
-        },
+        "data": response,
+        "order": [], // Remove default sorting
         "rowCallback": function (row, data) {
-            $('td:eq(0)', row).html('<a href="' + window.location.origin + '/' + data.ShortURL + '">' + data.ShortURL + '</a>');
-            $('td:eq(1)', row).html('<a href="' + data.LongURL + '">' + data.LongURL + '</a>');
-            $('td:eq(2)', row).html(`
-                <div class=\"field\"><button type=\"submit\" onclick='editURL(this, "` + token + `", "` + data.ShortURL + `", "` + data.LongURL + `")'><i class=\"fa-solid fa-pencil\"></i></button></div>
-            `);
+          $('td:eq(0)', row).html('<a href="' + window.location.origin + '/' + data.ShortURL + '">' + data.ShortURL + '</a>');
+          $('td:eq(1)', row).html('<a href="' + data.LongURL + '">' + data.LongURL + '</a>');
+          $('td:eq(2)', row).html(`
+            <div class="field"><button type="submit" onclick='editURL(this, "${token}", "${data.ShortURL}", "${data.LongURL}")'><i class="fa-solid fa-pencil"></i></button></div>
+          `);
         },
         "columns": [
-            {data: "ShortURL"},
-            {data: "LongURL"},
-            {"defaultContent": "<div class=\"field\"><button type=\"submit\"><i class=\"fa-solid fa-pencil\"></i></button></div>"},
+          { data: "ShortURL" },
+          { data: "LongURL" },
+          { "defaultContent": "<div class=\"field\"><button type=\"submit\"><i class=\"fa-solid fa-pencil\"></i></button></div>" },
         ],
-    });
+      });
+    },
+    error: function (error) {
+      console.log("Error loading table:", error);
+    }
+  });
 }
 
-const updateUI = async () => {
+async function updateUI() {
     if (localStorage.getItem('notification') === 'loggedout') {
         localStorage.removeItem('notification')
         Swal.fire({
@@ -88,23 +93,31 @@ const updateUI = async () => {
         document.getElementById("user").innerHTML = user_obj.name;
         let token = await auth0.getTokenSilently();
         $(document).ready(function () {
-            loadTable(token)
+            loadTable(token);
         });
     }
     document.getElementById("anonymous-form").style.display = isAuthenticated ? "none" : ""
     document.getElementById("authenticated-form").style.display = !isAuthenticated ? "none" : ""
 }
 
-const login = async () => {
+async function login() {
     localStorage.setItem('notification', 'loggedin')
     await auth0.loginWithRedirect({
         redirect_uri: window.location.href,
     })
 }
 
-const logout = () => {
+async function logout() {
     localStorage.setItem('notification', 'loggedout')
     auth0.logout({
         returnTo: window.location.href,
     })
 }
+
+async function init() {
+    await configureClient()
+    await processLoginState()
+    await updateUI()
+}
+
+window.addEventListener('load', init);
