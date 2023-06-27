@@ -22,7 +22,6 @@ async function processLoginState() {
 }
 
 function loadTable(token) {
-  console.log(token);
   $.ajax({
     url: "/data/shorten",
     type: "GET",
@@ -63,6 +62,21 @@ function loadTable(token) {
   });
 }
 
+function toggleElementVisibility(elementId, isVisible) {
+  const element = document.getElementById(elementId);
+  if (isVisible) {
+    element.classList.add('transition');
+    element.classList.remove('hidden');
+    element.style.display = ''; // Reset the display property
+  } else {
+    element.classList.remove('transition');
+    element.classList.add('hidden');
+    element.addEventListener('transitionend', function() {
+      element.style.display = 'none'; // Set display: none after the transition is complete
+    }, { once: true });
+  }
+}
+
 async function updateUI() {
     if (localStorage.getItem('notification') === 'loggedout') {
         localStorage.removeItem('notification')
@@ -73,7 +87,8 @@ async function updateUI() {
             confirmButtonText: 'OK'
         })
     }
-    if (localStorage.getItem('notification') === 'loggedin') {
+    const user = await auth0.getUser();
+    if (localStorage.getItem('notification') === 'loggedin' && user) {
         localStorage.removeItem('notification')
         Swal.fire({
             title: 'Success!',
@@ -83,8 +98,8 @@ async function updateUI() {
         })
     }
     const isAuthenticated = await auth0.isAuthenticated()
-    document.getElementById("btn-login").style.display = isAuthenticated ? "none" : ""
-    document.getElementById("btn-logout").style.display = !isAuthenticated ? "none" : ""
+    toggleElementVisibility('btn-login', !isAuthenticated);
+    toggleElementVisibility('btn-logout', isAuthenticated);
     if (isAuthenticated) {
         let user = JSON.stringify(
             await auth0.getUser()
@@ -96,15 +111,15 @@ async function updateUI() {
             loadTable(token);
         });
     }
-    document.getElementById("anonymous-form").style.display = isAuthenticated ? "none" : ""
-    document.getElementById("authenticated-form").style.display = !isAuthenticated ? "none" : ""
+    toggleElementVisibility('anonymous-form', !isAuthenticated);
+    toggleElementVisibility('authenticated-form', isAuthenticated);
 }
 
 async function login() {
-    localStorage.setItem('notification', 'loggedin')
-    await auth0.loginWithRedirect({
-        redirect_uri: window.location.href,
-    })
+  localStorage.setItem('notification', 'loggedin')
+  await auth0.loginWithRedirect({
+      redirect_uri: window.location.href,
+  })
 }
 
 async function logout() {
@@ -116,7 +131,11 @@ async function logout() {
 
 async function init() {
     await configureClient()
-    await processLoginState()
+    try {
+      await processLoginState()
+    } catch (error) {
+      console.log(error)
+    }
     await updateUI()
 }
 

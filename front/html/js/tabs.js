@@ -8,9 +8,9 @@ function show_tab_content() {
     $(".tab-pane").each(function () {
         let dom_pane_id = $(this).attr('id');
         if ("tab-content-" + current_pane === dom_pane_id) {
-            document.getElementById(dom_pane_id).style.display = "";
+            $(this).fadeIn(); // Smoothly fade in the current tab content
         } else {
-            document.getElementById(dom_pane_id).style.display = "none";
+            $(this).hide(); // Hide other tab contents
         }
     })
 }

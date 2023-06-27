@@ -51,17 +51,17 @@
                 <h1><a href="/" rel="dofollow">URL Shortener - on3z.cc</a></h1>
             </div>
             <div class="formbg-outer">
-                <div class="formbg">
+                <div class="formbg" style="min-height: 300px">
                     <div class="row" style="margin: 5px; padding-top: 15px">
                         <div class="field col-md-2">
-                            <input id="btn-login" type="submit" onclick="login()" value="Log in"></input>
+                            <input id="btn-login" type="submit" onclick="login()" value="Log in" class="hidden"></input>
                         </div>
                         <div class="field col-md-8"></div>
                         <div class="field col-md-2">
-                            <input id="btn-logout" type="submit" onclick="logout()" value="Log out"></input>
+                            <input id="btn-logout" type="submit" onclick="logout()" value="Log out" class="hidden"></input>
                         </div>
                     </div>
-                    <div id="anonymous-form" class="formbg-inner padding-horizontal--48">
+                    <div id="anonymous-form" class="formbg-inner padding-horizontal--48 hidden">
                         <span class="padding-bottom--15" style="text-align: center">Generate your short url</span>
                         <form id="generate-short-url">
                             <div class="field padding-bottom--24">
@@ -75,7 +75,7 @@
                             </div>
                         </form>
                     </div>
-                    <div id="authenticated-form" class="formbg-inner padding-horizontal--48">
+                    <div id="authenticated-form" class="formbg-inner padding-horizontal--48 hidden">
                         <ul id="nav-tabs" class="nav nav-tabs" style="margin-bottom: 20px">
                             <li class="nav-item col-md-6" style="cursor: pointer; text-align: center">
                                 <a class="nav-link active" href="#home" id="tab-home">Add new URL</a>
