@@ -47,9 +47,9 @@ jobs:
     - name: Build
       run: |
         docker compose build
-        docker tag on3zcc_api ${{ env.IMAGE_VERSION_API }}
-        docker tag on3zcc_front ${{ env.IMAGE_VERSION_FRONT }}
-        docker tag on3zcc_db ${{ env.IMAGE_VERSION_DB }}
+        docker tag on3zcc-api ${{ env.IMAGE_VERSION_API }}
+        docker tag on3zcc-front ${{ env.IMAGE_VERSION_FRONT }}
+        docker tag on3zcc-db ${{ env.IMAGE_VERSION_DB }}
     - name: Push API
       uses: docker/build-push-action@v3
       with:
