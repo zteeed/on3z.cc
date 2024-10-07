@@ -4,8 +4,7 @@
 
 ```bash
 export POSTGRES_PASSWORD=...
-docker-compose build --no-cache
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 ## Database
