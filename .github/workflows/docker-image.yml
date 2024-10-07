@@ -47,7 +47,6 @@ jobs:
     - name: Build
       run: |
         docker compose build
-        docker image ls
         docker tag on3zcc-api ${{ env.IMAGE_VERSION_API }}
         docker tag on3zcc-front ${{ env.IMAGE_VERSION_FRONT }}
         docker tag on3zcc-db ${{ env.IMAGE_VERSION_DB }}
