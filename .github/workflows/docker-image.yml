@@ -46,7 +46,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build
       run: |
-        docker-compose build
+        docker compose build
         docker tag on3zcc_api ${{ env.IMAGE_VERSION_API }}
         docker tag on3zcc_front ${{ env.IMAGE_VERSION_FRONT }}
         docker tag on3zcc_db ${{ env.IMAGE_VERSION_DB }}
