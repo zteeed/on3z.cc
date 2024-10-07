@@ -1,0 +1,26 @@
+# .air.toml
+
+# Root directory of the project
+root = "."
+
+# Temporary directory for builds
+tmp_dir = "tmp"
+
+# Build command to execute
+build = "go build -o ./tmp/main ."
+
+# Path to the binary to run
+bin = "tmp/main"
+
+# Watch directories or files
+include_dir = ["go"]
+
+# Ignore certain paths (optional)
+exclude_dir = ["tmp", ".git", "vendor"]
+
+# Restart delay (optional)
+# delay = "200ms"
+
+# Log level (optional)
+# log_level = "info"
+

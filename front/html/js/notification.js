@@ -40,24 +40,38 @@ form_authenticated.onsubmit = async function (e) {
     e.preventDefault();
 };
 
-function editURL(e, token, shortURL, longURL) {
+function editURL(e, token, shortURL, longURL, description) {
+    const displayDescription = (
+        description !== undefined && description !== "undefined" && description !== "null"
+    ) ? description : '';
     Swal.fire({
         title: 'Edit the URL destination',
         html:
             'You are going to update the following short url: <b><u><a href="' + window.location.origin + '/' + shortURL + '">' + window.location.origin + '/' + shortURL + '</a></u></b><br><br>' +
             'Previous longURL for this short link is: <b><u><a href="' + longURL + '">' + longURL + '</a></u></b><br><br>' +
-            'Enter the new longURL to associate:',
+            'Enter the new longURL to associate:' +
+            '<div class="swal2-html-container" id="swal2-html-container" style="display: block;">' +
+                '<input id="swal-input-longURL" class="swal2-input" style="margin-top: 0; height: 2.125em; width: 14.5em" value="' + longURL + '"><br>' +
+            '</div><br>' +
+            'Enter a new description for the short URL:<br>' +
+            '<div class="swal2-html-container" id="swal2-html-container" style="display: block;">' +
+                '<input id="swal-input-description" class="swal2-input" style="margin-top: 0; height: 2.125em; width: 14.5em" value="' + displayDescription + '">' +
+            '</div>',
+        /*
         input: 'text',
         inputAttributes: {
             autocapitalize: 'off'
         },
+        */
         showCancelButton: true,
         showLoaderOnConfirm: true,
         confirmButtonText: 'Yes, update it!',
         cancelButtonText: 'No, cancel!',
         confirmButtonColor: '#5468D4',
         cancelButtonColor: '#dc3741',
-        preConfirm: (newURL) => {
+        preConfirm: () => {
+            const newURL = document.getElementById('swal-input-longURL').value;
+            const newDescription = document.getElementById('swal-input-description').value;
             return fetch(`/data/shorten`, {
                 method: 'PUT',
                 headers: {
@@ -65,6 +79,7 @@ function editURL(e, token, shortURL, longURL) {
                 },
                 body: JSON.stringify({
                     longURL: newURL,
+                    description: newDescription,
                     shortURL: shortURL,
                 })
             }).then(response => {

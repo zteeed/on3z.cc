@@ -1,0 +1,26 @@
+FROM golang:1.18
+
+WORKDIR /go/src
+
+RUN apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
+ENV TZ="Europe/Paris"
+
+RUN curl -sSfL https://goblin.run/github.com/air-verse/air | sh
+
+COPY go ./go
+COPY go.mod .
+COPY go.sum .
+COPY app.go .
+COPY main.go .
+
+ENV CGO_ENABLED=0
+RUN go get -d -v ./...
+
+COPY .air.toml /go/src/.air.toml
+
+EXPOSE 8888/tcp
+
+ENTRYPOINT ["air"]

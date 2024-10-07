@@ -3,8 +3,9 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 func InitializeSqlDB() *sql.DB {
@@ -25,19 +26,19 @@ func InitializeSqlDB() *sql.DB {
 
 func InitializeDatabase(db *sql.DB) Database {
 	StatementSelectShortURLMapping, err := db.Prepare(
-		"SELECT short_url, long_url, auth0_sub FROM short_url_maps WHERE short_url = $1 LIMIT 1;",
+		"SELECT short_url, long_url, description, auth0_sub FROM short_url_maps WHERE short_url = $1 LIMIT 1;",
 	)
 	if err != nil {
 		panic(err)
 	}
 	StatementListShortURLMappingAuthenticated, err := db.Prepare(
-		"SELECT short_url, long_url FROM short_url_maps WHERE auth0_sub = $1 LIMIT $2 OFFSET $3;",
+		"SELECT short_url, long_url, description FROM short_url_maps WHERE auth0_sub = $1 LIMIT $2 OFFSET $3;",
 	)
 	if err != nil {
 		panic(err)
 	}
 	StatementSelectShortURLMappingAuthenticated, err := db.Prepare(
-		"SELECT short_url, long_url FROM short_url_maps WHERE short_url = $1 AND auth0_sub = $2 LIMIT 1;",
+		"SELECT short_url, long_url, description FROM short_url_maps WHERE short_url = $1 AND auth0_sub = $2 LIMIT 1;",
 	)
 	if err != nil {
 		panic(err)
@@ -49,7 +50,7 @@ func InitializeDatabase(db *sql.DB) Database {
 		panic(err)
 	}
 	StatementUpdateShortURLMapping, err := db.Prepare(
-		"UPDATE short_url_maps SET long_url = $1 WHERE short_url = $2 AND auth0_sub = $3;",
+		"UPDATE short_url_maps SET long_url = $1, description = $2 WHERE short_url = $3 AND auth0_sub = $4;",
 	)
 	if err != nil {
 		panic(err)

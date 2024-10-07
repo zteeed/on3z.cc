@@ -44,13 +44,15 @@ function loadTable(token) {
         "order": [], // Remove default sorting
         "rowCallback": function (row, data) {
           $('td:eq(0)', row).html('<a href="' + window.location.origin + '/' + data.ShortURL + '">' + data.ShortURL + '</a>');
-          $('td:eq(1)', row).html('<a href="' + data.LongURL + '">' + data.LongURL + '</a>');
-          $('td:eq(2)', row).html(`
-            <div class="field"><button type="submit" onclick='editURL(this, "${token}", "${data.ShortURL}", "${data.LongURL}")'><i class="fa-solid fa-pencil"></i></button></div>
+          $('td:eq(1)', row).html('<span>' +  data.Description !== undefined ? data.Description : '' + '</span>');
+          $('td:eq(2)', row).html('<a href="' + data.LongURL + '">' + data.LongURL + '</a>');
+          $('td:eq(3)', row).html(`
+            <div class="field"><button type="submit" onclick='editURL(this, "${token}", "${data.ShortURL}", "${data.LongURL}", "${data.Description}")'><i class="fa-solid fa-pencil"></i></button></div>
           `);
         },
         "columns": [
           { data: "ShortURL" },
+          { data: "Description", defaultContent: "" },
           { data: "LongURL" },
           { "defaultContent": "<div class=\"field\"><button type=\"submit\"><i class=\"fa-solid fa-pencil\"></i></button></div>" },
         ],

@@ -15,12 +15,14 @@ type Database struct {
 }
 
 type ShortURLMapping struct {
-	ShortURL string
-	LongURL  string
-	Auth0Sub *string
+	ShortURL    string
+	LongURL     string
+	Description *string
+	Auth0Sub    *string
 }
 
 type ShortURLMappingRestrict struct {
-	ShortURL string
-	LongURL  string
+	ShortURL    string
+	LongURL     string
+	Description *string
 }

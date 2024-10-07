@@ -6,6 +6,7 @@ type POSTPayload struct {
 }
 
 type PUTPayload struct {
-	ShortURL string `json:"shortURL"`
-	LongURL  string `json:"longURL"`
+	ShortURL    string `json:"shortURL"`
+	LongURL     string `json:"longURL"`
+	Description string `json:"description"`
 }

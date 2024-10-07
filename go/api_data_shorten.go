@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/auth0/go-jwt-middleware/v2/validator"
-	extract "github.com/golang-jwt/jwt/v4"
-	"github.com/samber/lo"
-	"on3z.cc/go/database"
 	"log"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/auth0/go-jwt-middleware/v2/validator"
+	extract "github.com/golang-jwt/jwt/v4"
+	"github.com/samber/lo"
+	"on3z.cc/go/database"
 )
 
 type DataShortenHandler struct {
@@ -166,7 +167,7 @@ func (h *DataShortenHandler) generateShortUrl(data POSTPayload) string {
 }
 
 func (h *DataShortenHandler) listShortUrlByUser(auth0Sub string, pageLength int, offset int) []byte {
-	result, err := database.ListShortURLByUser(h.database, auth0Sub, pageLength, offset)
+	result, _ := database.ListShortURLByUser(h.database, auth0Sub, pageLength, offset)
 	response, err := json.Marshal(result)
 	if err != nil {
 		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
@@ -179,6 +180,6 @@ func (h *DataShortenHandler) updateShortUrl(data PUTPayload, auth0Sub string) er
 	if err != nil {
 		return err
 	}
-	database.UpdateShortUrl(h.database, data.LongURL, data.ShortURL, auth0Sub)
+	database.UpdateShortUrl(h.database, data.LongURL, data.Description, data.ShortURL, auth0Sub)
 	return nil
 }
