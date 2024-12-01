@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/auth0/go-jwt-middleware/v2 v2.1.0
-	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/lib/pq v1.10.7
 	github.com/prometheus/client_golang v1.14.0
 	github.com/samber/lo v1.36.0
